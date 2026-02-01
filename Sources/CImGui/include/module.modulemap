@@ -1,0 +1,4 @@
+module CImGui {
+    header "cimgui_module.h"
+    export *
+}

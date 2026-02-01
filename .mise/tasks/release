@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#MISE alias="rl"
+
+mkdir -p .mise-home
+HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize
+mkdir -p "$output_dir"
+cp "$build_dir/release/$binary_name" "$output_dir/$binary_name"
+cp Sources/CRaylib/libEGL.dylib "$output_dir/"
+cp Sources/CRaylib/libGLESv2.dylib "$output_dir/"
+strip "$output_dir/$binary_name"
+echo "SwiftPM Static Binary size:"
+ls -lh "$output_dir/$binary_name" | awk '{print $5}'

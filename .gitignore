@@ -1,0 +1,40 @@
+.build/
+.swiftpm/
+.DS_Store
+output/
+raylib/
+imgui/
+raygui/
+imgui.ini
+
+# Generated C Library Artifacts
+Sources/CRaylib/libraylib.a
+Sources/CRaylib/include/raylib.h
+Sources/CRaylib/include/raymath.h
+Sources/CRaylib/include/rlgl.h
+Sources/CRaylib/include/raygui.h
+Sources/CRaylib/libEGL.dylib
+Sources/CRaylib/libGLESv2.dylib
+
+Sources/CImGui/libcimgui.a
+Sources/CImGui/include/cimgui.h
+Sources/CImGui/include/implot.h
+Sources/CImGui/include/cimplot.h
+Sources/CImGui/include/cimplot3d.h
+Sources/CImGui/include/cimgui_impl.h
+
+# AI Tools and IDEs
+.trae/
+.cursor/
+.windsurf/
+.claude/
+.copilot/
+.vscode/
+.idea/
+.zed/
+*.iml
+
+# Documentation
+AGENTS.md
+*.md
+!README.md

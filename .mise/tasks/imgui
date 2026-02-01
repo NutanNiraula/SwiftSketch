@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+#MISE description="Fetch latest cimgui and build static library"
+#MISE alias="imgui"
+
+rm -rf imgui implot cimplot cimplot3d
+git clone --depth 1 https://github.com/cimgui/cimgui.git imgui
+git clone --depth 1 https://github.com/epezent/implot.git implot
+git clone --depth 1 https://github.com/cimgui/cimplot.git cimplot
+git clone --depth 1 https://github.com/cimgui/cimplot3d.git cimplot3d
+cd imgui && git submodule update --init --depth 1
+cd ../cimplot3d && git submodule update --init --depth 1
+cd ..
+
+python3 - <<'PY'
+import sys
+with open('cimplot3d/cimplot3d.cpp', 'r') as f:
+    lines = f.readlines()
+with open('cimplot3d/cimplot3d.cpp', 'w') as f:
+    for line in lines:
+        if 'dest.Colors[ImPlot3DCol_COUNT].x = src.Colors[ImPlot3DCol_COUNT].x;' in line:
+            f.write('    for(int i=0; i<ImPlot3DCol_COUNT; i++) { dest.Colors[i].x = src.Colors[i].x; dest.Colors[i].y = src.Colors[i].y; dest.Colors[i].z = src.Colors[i].z; dest.Colors[i].w = src.Colors[i].w; }\n')
+        elif 'dest.Colors[ImPlot3DCol_COUNT].' in line and ' = src.Colors[ImPlot3DCol_COUNT].' in line:
+            continue
+        else:
+            f.write(line)
+PY
+
+python3 - <<'PY'
+import sys
+with open('cimplot/cimplot.cpp', 'r') as f:
+    lines = f.readlines()
+with open('cimplot/cimplot.cpp', 'w') as f:
+    for line in lines:
+        if 'dest.FormatSpec[16] = src.FormatSpec[16];' in line:
+            f.write('    for(int i=0; i<16; i++) { dest.FormatSpec[i] = src.FormatSpec[i]; }\n')
+        else:
+            f.write(line)
+PY
+
+cd imgui && MACOSX_DEPLOYMENT_TARGET=11.0 make clean || true
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c cimgui.cpp -o cimgui.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui.cpp -o imgui/imgui.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui_draw.cpp -o imgui/imgui_draw.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui_demo.cpp -o imgui/imgui_demo.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui_tables.cpp -o imgui/imgui_tables.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui_widgets.cpp -o imgui/imgui_widgets.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../../Sources/CRaylib/include -DIMGUI_IMPL_API='extern "C"' -DIMGUI_IMPL_OPENGL_ES2 -c imgui/backends/imgui_impl_opengl3.cpp -o imgui/backends/imgui_impl_opengl3.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../implot -c ../implot/implot.cpp -o ../implot/implot.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../implot -c ../implot/implot_items.cpp -o ../implot/implot_items.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../implot -c ../implot/implot_demo.cpp -o ../implot/implot_demo.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../cimplot3d/implot3d -c ../cimplot3d/implot3d/implot3d.cpp -o ../cimplot3d/implot3d/implot3d.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../cimplot3d/implot3d -c ../cimplot3d/implot3d/implot3d_items.cpp -o ../cimplot3d/implot3d/implot3d_items.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../cimplot3d/implot3d -c ../cimplot3d/implot3d/implot3d_demo.cpp -o ../cimplot3d/implot3d/implot3d_demo.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../cimplot3d/implot3d -c ../cimplot3d/implot3d/implot3d_meshes.cpp -o ../cimplot3d/implot3d/implot3d_meshes.o
+
+mkdir -p cimplot/implot
+cp ../implot/implot.h cimplot/implot/implot.h
+cp ../implot/implot_internal.h cimplot/implot/implot_internal.h
+
+cd ../cimplot && MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I../imgui -I../imgui/imgui -I../implot -c cimplot.cpp -o cimplot.o
+cd ../cimplot3d && MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I../imgui -I../imgui/imgui -I./implot3d -c cimplot3d.cpp -o cimplot3d.o
+
+cd ../imgui
+ar -rc libcimgui.a cimgui.o imgui/imgui.o imgui/imgui_draw.o imgui/imgui_demo.o imgui/imgui_tables.o imgui/imgui_widgets.o imgui/backends/imgui_impl_opengl3.o ../implot/implot.o ../implot/implot_items.o ../implot/implot_demo.o ../cimplot/cimplot.o ../cimplot3d/implot3d/implot3d.o ../cimplot3d/implot3d/implot3d_items.o ../cimplot3d/implot3d/implot3d_demo.o ../cimplot3d/implot3d/implot3d_meshes.o ../cimplot3d/cimplot3d.o
+
+cd ..
+mkdir -p Sources/CImGui/include
+find Sources/CImGui/include -type f -name "*.h" ! -name "cimgui_module.h" -delete
+cp imgui/libcimgui.a Sources/CImGui/libcimgui.a
+cp imgui/cimgui.h Sources/CImGui/include/
+cp implot/implot.h Sources/CImGui/include/
+cp cimplot/cimplot.h Sources/CImGui/include/
+cp cimplot3d/cimplot3d.h Sources/CImGui/include/
+cp imgui/cimgui_impl.h Sources/CImGui/include/ 2>/dev/null || true
+
+python3 - <<'PY'
+from pathlib import Path
+path = Path('Sources/CImGui/include/cimgui_impl.h')
+if path.exists():
+    text = path.read_text()
+    if '"cimgui.h"' not in text:
+        lines = text.splitlines()
+        if lines and lines[0].startswith('#ifndef CIMGUI_IMPL_DEFINED'):
+            lines.insert(2, '#include "cimgui.h"')
+            path.write_text('\n'.join(lines) + '\n')
+PY

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Remove all generated C artifacts (hard clean)"
+#MISE alias="reset"
+#MISE depends=["clean"]
+
+rm -rf Sources/CRaylib/libraylib.a Sources/CRaylib/include/raylib.h Sources/CRaylib/include/raymath.h Sources/CRaylib/include/rlgl.h Sources/CRaylib/include/raygui.h Sources/CRaylib/libEGL.dylib Sources/CRaylib/libGLESv2.dylib
+rm -rf Sources/CImGui/libcimgui.a Sources/CImGui/include/cimgui.h Sources/CImGui/include/implot.h Sources/CImGui/include/cimplot.h Sources/CImGui/include/cimplot3d.h Sources/CImGui/include/cimgui_impl.h

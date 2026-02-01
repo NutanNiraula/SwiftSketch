@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE alias="bl"
+
+mkdir -p .mise-home
+HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build --disable-sandbox
+mkdir -p "$output_dir"
+cp "$build_dir/debug/$binary_name" "$output_dir/$binary_name"
+cp Sources/CRaylib/libEGL.dylib "$output_dir/"
+cp Sources/CRaylib/libGLESv2.dylib "$output_dir/"

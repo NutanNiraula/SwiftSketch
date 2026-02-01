@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE alias="rn"
+#MISE depends=["build"]
+
+"$output_dir/$binary_name"

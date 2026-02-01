@@ -1,0 +1,6 @@
+[env]
+output_dir = "output"
+binary_name = "App"
+build_dir = ".build"
+SWIFTPM_CONFIG_DIR = ".swiftpm"
+SWIFTPM_SECURITY_DIR = ".swiftpm"

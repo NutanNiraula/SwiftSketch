@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE alias=["d", "dyn"]
+#MISE env={ BUILD_DYNAMIC = "1" }
+
+mkdir -p .mise-home
+HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize
+mkdir -p "$output_dir"
+cp "$build_dir/release/$binary_name" "$output_dir/$binary_name"
+strip "$output_dir/$binary_name"
+echo "SwiftPM Dynamic Binary size (App only):"
+ls -lh "$output_dir/$binary_name" | awk '{print $5}'

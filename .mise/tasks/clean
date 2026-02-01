@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Clean build artifacts"
+#MISE alias="c"
+
+swift package clean
+rm -rf "$output_dir" raylib raygui imgui implot cimplot cimplot3d Sources/App/*.o imgui.ini

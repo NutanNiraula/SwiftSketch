@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#MISE description="Fetch latest raylib main and build static library with Angle (OpenGL ES 2.0)"
+#MISE alias="rlib"
+
+rm -rf raylib
+rm -rf raygui
+git clone --depth 1 --branch main https://github.com/raysan5/raylib.git raylib || (rm -rf raylib && git clone --depth 1 --branch master https://github.com/raysan5/raylib.git raylib)
+git clone --depth 1 https://github.com/raysan5/raygui.git raygui
+export MACOSX_DEPLOYMENT_TARGET=10.9 && cd raylib/src && make GRAPHICS=GRAPHICS_API_OPENGL_ES2
+mkdir -p ../../Sources/CRaylib/include
+cp libraylib.a ../../Sources/CRaylib/libraylib.a
+cp raylib.h ../../Sources/CRaylib/include/
+cp raymath.h ../../Sources/CRaylib/include/
+cp rlgl.h ../../Sources/CRaylib/include/
+cp ../../raygui/src/raygui.h ../../Sources/CRaylib/include/
+
+# Go back to project root
+cd ../..
+
+BRAVE_PATH="/Applications/Brave Browser.app/Contents/Frameworks/Brave Browser Framework.framework/Versions/Current/Libraries"
+CHROME_PATH="/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/Current/Libraries"
+
+if [ -d "$BRAVE_PATH" ]; then
+    echo "Found Brave Browser ANGLE libraries"
+    cp "$BRAVE_PATH/libEGL.dylib" Sources/CRaylib/
+    cp "$BRAVE_PATH/libGLESv2.dylib" Sources/CRaylib/
+elif [ -d "$CHROME_PATH" ]; then
+    echo "Found Google Chrome ANGLE libraries"
+    cp "$CHROME_PATH/libEGL.dylib" Sources/CRaylib/
+    cp "$CHROME_PATH/libGLESv2.dylib" Sources/CRaylib/
+else
+    echo "Error: Could not find ANGLE libraries in Brave or Chrome"
+    exit 1
+fi
+
+install_name_tool -id @rpath/libEGL.dylib Sources/CRaylib/libEGL.dylib
+install_name_tool -id @rpath/libGLESv2.dylib Sources/CRaylib/libGLESv2.dylib
+codesign -f -s - Sources/CRaylib/libEGL.dylib
+codesign -f -s - Sources/CRaylib/libGLESv2.dylib
+
+mkdir -p Sources/CRaylib/include/GLES2 Sources/CRaylib/include/KHR
+curl -s -o Sources/CRaylib/include/GLES2/gl2.h https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/api/GLES2/gl2.h
+curl -s -o Sources/CRaylib/include/GLES2/gl2platform.h https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/api/GLES2/gl2platform.h
+curl -s -o Sources/CRaylib/include/KHR/khrplatform.h https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Fetch latest raylib, raygui, and cimgui"
+#MISE alias="setup"
+#MISE depends=["raylib", "imgui"]
+
+mise run clean
