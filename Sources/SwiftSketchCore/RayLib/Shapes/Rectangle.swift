@@ -1,6 +1,8 @@
 public enum Rect {
     public static func draw(_ rect: [Int]) {
-        guard rect.count >= 4 else { return }
+        guard rect.count == 4 else {
+            fatalError("Rect array expects exactly 4 values [x, y, w, h].")
+        }
         draw(x: rect[0], y: rect[1], w: rect[2], h: rect[3])
     }
     
@@ -42,7 +44,9 @@ public enum Rect {
     }
 
     public static func fill(_ rect: [Int], color: Color? = nil) {
-        guard rect.count >= 4 else { return }
+        guard rect.count == 4 else {
+            fatalError("Rect array expects exactly 4 values [x, y, w, h].")
+        }
         fill(x: rect[0], y: rect[1], w: rect[2], h: rect[3], color: color)
     }
     
@@ -70,7 +74,9 @@ public enum Rect {
     }
 
     public static func line(_ rect: [Int], t: Double? = nil, color: Color? = nil) {
-        guard rect.count >= 4 else { return }
+        guard rect.count == 4 else {
+            fatalError("Rect array expects exactly 4 values [x, y, w, h].")
+        }
         line(x: rect[0], y: rect[1], w: rect[2], h: rect[3], t: t, color: color)
     }
     

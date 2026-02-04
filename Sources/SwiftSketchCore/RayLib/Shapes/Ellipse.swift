@@ -1,6 +1,8 @@
 public enum Circle {
     public static func draw(_ circle: [Double]) {
-        guard circle.count >= 3 else { return }
+        guard circle.count == 3 else {
+            fatalError("Circle array expects exactly 3 values [x, y, r].")
+        }
         draw(x: Int(circle[0]), y: Int(circle[1]), r: circle[2])
     }
     
@@ -19,7 +21,9 @@ public enum Circle {
     }
     
     public static func fill(_ circle: [Double], color: Color? = nil) {
-        guard circle.count >= 3 else { return }
+        guard circle.count == 3 else {
+            fatalError("Circle array expects exactly 3 values [x, y, r].")
+        }
         fill(x: Int(circle[0]), y: Int(circle[1]), r: circle[2], color: color)
     }
     
@@ -29,7 +33,9 @@ public enum Circle {
     }
     
     public static func line(_ circle: [Double], color: Color? = nil) {
-        guard circle.count >= 3 else { return }
+        guard circle.count == 3 else {
+            fatalError("Circle array expects exactly 3 values [x, y, r].")
+        }
         line(x: Int(circle[0]), y: Int(circle[1]), r: circle[2], color: color)
     }
     
@@ -93,7 +99,9 @@ public enum Ring {
 
 public enum Ellipse {
     public static func draw(_ ellipse: [Double]) {
-        guard ellipse.count >= 4 else { return }
+        guard ellipse.count == 4 else {
+            fatalError("Ellipse array expects exactly 4 values [x, y, rx, ry].")
+        }
         draw(x: Int(ellipse[0]), y: Int(ellipse[1]), rx: ellipse[2], ry: ellipse[3])
     }
     
@@ -112,7 +120,9 @@ public enum Ellipse {
     }
     
     public static func fill(_ ellipse: [Double], color: Color? = nil) {
-        guard ellipse.count >= 4 else { return }
+        guard ellipse.count == 4 else {
+            fatalError("Ellipse array expects exactly 4 values [x, y, rx, ry].")
+        }
         fill(x: Int(ellipse[0]), y: Int(ellipse[1]), rx: ellipse[2], ry: ellipse[3], color: color)
     }
     
@@ -122,7 +132,9 @@ public enum Ellipse {
     }
     
     public static func line(_ ellipse: [Double], color: Color? = nil) {
-        guard ellipse.count >= 4 else { return }
+        guard ellipse.count == 4 else {
+            fatalError("Ellipse array expects exactly 4 values [x, y, rx, ry].")
+        }
         line(x: Int(ellipse[0]), y: Int(ellipse[1]), rx: ellipse[2], ry: ellipse[3], color: color)
     }
     

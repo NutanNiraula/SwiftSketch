@@ -43,7 +43,9 @@ public func strokeWeight(_ weight: Double) {
 
 public enum Line {
     public static func draw(_ line: [Int], t: Double? = nil, color: Color? = nil) {
-        guard line.count >= 4 else { return }
+        guard line.count == 4 else {
+            fatalError("Line array expects exactly 4 values [x1, y1, x2, y2].")
+        }
         draw(x1: line[0], y1: line[1], x2: line[2], y2: line[3], t: t, color: color)
     }
     
@@ -75,7 +77,9 @@ public enum Line {
 
 public enum Point {
     public static func draw(_ point: [Int], size: Double? = nil, color: Color? = nil) {
-        guard point.count >= 2 else { return }
+        guard point.count == 2 else {
+            fatalError("Point array expects exactly 2 values [x, y].")
+        }
         draw(x: point[0], y: point[1], size: size, color: color)
     }
     

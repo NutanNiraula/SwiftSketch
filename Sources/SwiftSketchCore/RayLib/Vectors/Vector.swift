@@ -133,12 +133,13 @@ public extension Vector2 {
 extension Vector2: @retroactive ExpressibleByArrayLiteral {
     public typealias ArrayLiteralElement = Double
     
+    /// Convenience for prototyping.
+    /// - Warning: Array literals allocate and are slower in hot paths. Prefer Vector2(x, y).
     public init(arrayLiteral elements: Double...) {
-        if elements.count >= 2 {
-            self.init(elements[0], elements[1])
-        } else {
-            self = .zero
+        guard elements.count == 2 else {
+            fatalError("Vector2 array literal expects exactly 2 values [x, y].")
         }
+        self.init(elements[0], elements[1])
     }
 }
 

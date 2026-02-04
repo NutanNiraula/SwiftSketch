@@ -30,14 +30,13 @@ public final class SampleSketch: Sketch {
         clearBackground(.rayWhite)
         
         // 2. Draw shapes (using high-level wrappers)
-        Rect.fill(x: Int(xPos), y: 360, w: 50, h: 50, color: .orange)
-        Text.draw("Hello Swift!", x: 100, y: 20, size: 24, color: .gray)
+        Rect.fill([Int(xPos), 360, 50, 50], color: .orange)
+        Text.draw("Hello SwiftSketch!", xy: [100, 20], size: 24, color: .gray)
         
         // 3. Draw UI (Immediate Mode)
-        if ImGuiUI.begin("Controls") {
-            ImGuiUI.text("Position: \(xPos)")
-            // Add more controls here...
+        Window("Controls") {
+            ImText("Position: \(xPos)")
         }
-        ImGuiUI.end()
+        .render()
     }
 }
