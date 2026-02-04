@@ -30,8 +30,8 @@ public final class SampleSketch: Sketch {
         clearBackground(.rayWhite)
         
         // 2. Draw shapes (using high-level wrappers)
-        rect(Int(xPos), 360, 50, 50, color: .orange)
-        text("Hello Swift!", 100, 20, fontSize: 24, color: .gray)
+        Rect.fill(x: Int(xPos), y: 360, w: 50, h: 50, color: .orange)
+        Text.draw("Hello Swift!", x: 100, y: 20, size: 24, color: .gray)
         
         // 3. Draw UI (Immediate Mode)
         if ImGuiUI.begin("Controls") {

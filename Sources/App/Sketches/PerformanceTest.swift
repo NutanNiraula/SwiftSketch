@@ -46,13 +46,13 @@ public final class PerformanceTest: Sketch {
             let y = Int((rngState >> 16) & 0xFFFF) % h
             
             // Standard high-level API call
-            rect(x, y, 30, 30, color: rectColor)
+            Rect.fill(x: x, y: y, w: 30, h: 30, color: rectColor)
         }
         
         // UI Overlay
-        rect(16, 42, 220, 60, color: .white)
-        text(message, 20, 50, fontSize: 18, color: .black)
-        text("Count: \(count)", 20, 70, fontSize: 18, color: .gray)
-        text("FPS: \(GetFPS())", 20, 90, fontSize: 18, color: .gray)
+        Rect.fill(x: 16, y: 42, w: 220, h: 60, color: .white)
+        Text.draw(message, x: 20, y: 50, size: 18, color: .black)
+        Text.draw("Count: \(count)", x: 20, y: 70, size: 18, color: .gray)
+        Text.draw("FPS: \(GetFPS())", x: 20, y: 90, size: 18, color: .gray)
     }
 }

@@ -1,35 +1,43 @@
 import CRaylib
 
 public extension Vector2 {
+    init(_ x: Int, _ y: Int) {
+        self.init(x: Float(x), y: Float(y))
+    }
+    
+    init(_ x: Double, _ y: Double) {
+        self.init(x: Float(x), y: Float(y))
+    }
+    
     static var zero = Vector2Zero()
     static var one = Vector2One()
     
     static func windowSize() -> Vector2 {
-        Vector2(x: Float(App.screenWidth), y: Float(App.screenHeight))
+        Vector2(App.screenWidth, App.screenHeight)
     }
     
     static func midWindow() -> Vector2 {
-        Vector2(x: Float(App.screenWidth)/2, y: Float(App.screenHeight)/2)
+        Vector2(Double(App.screenWidth) / 2, Double(App.screenHeight) / 2)
     }
     
     static func midWindowHeight() -> Vector2 {
-        Vector2(x: 0.0, y: Float(App.screenHeight)/2)
+        Vector2(0.0, Double(App.screenHeight) / 2)
     }
     
     static func midWindowWidth() -> Vector2 {
-        Vector2(x: Float(App.screenWidth)/2, y: 0.0)
+        Vector2(Double(App.screenWidth) / 2, 0.0)
     }
     
     static func square(_ val: Double) -> Vector2 {
-        Vector2(x: Float(val), y: Float(val))
+        Vector2(val, val)
     }
     
     static func width(_ val: Double) -> Vector2 {
-        Vector2(x: Float(val), y: 0.0)
+        Vector2(val, 0.0)
     }
     
     static func height(_ val: Double) -> Vector2 {
-        Vector2(x: 0.0, y: Float(val))
+        Vector2(0.0, val)
     }
     
     static func +(lhs: Vector2, rhs: Vector2) -> Vector2 {
@@ -86,7 +94,7 @@ public extension Vector2 {
     
     static func /(lhs: Vector2, scalar: Double) -> Vector2 {
         let value = Float(scalar)
-        return Vector2(x: lhs.x / value, y: lhs.y / value)
+        return Vector2(Double(lhs.x / value), Double(lhs.y / value))
     }
     
     static func /=(lhs: inout Vector2, rhs: Vector2) {
@@ -98,7 +106,7 @@ public extension Vector2 {
     }
     
     static prefix func -(vector: Vector2) -> Vector2 {
-        return Vector2(x: -vector.x, y: -vector.y)
+        return Vector2(Double(-vector.x), Double(-vector.y))
     }
     
     func magnitude() -> Double { Double(Vector2Length(self)) }
@@ -120,6 +128,18 @@ public extension Vector2 {
     func lerp(to vector: Vector2, _ amount: Double) -> Vector2 { Vector2Lerp(self, vector, Float(amount)) }
     
     func reflected(toNormal: Vector2) -> Vector2 { Vector2Reflect(self, toNormal) }
+}
+
+extension Vector2: @retroactive ExpressibleByArrayLiteral {
+    public typealias ArrayLiteralElement = Double
+    
+    public init(arrayLiteral elements: Double...) {
+        if elements.count >= 2 {
+            self.init(elements[0], elements[1])
+        } else {
+            self = .zero
+        }
+    }
 }
 
 public extension Vector3 {

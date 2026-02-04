@@ -1,10 +1,10 @@
 .build/
 .swiftpm/
 .DS_Store
-output/
-raylib/
-imgui/
-raygui/
+/output/
+/raylib/
+/imgui/
+/raygui/
 imgui.ini
 
 # Generated C Library Artifacts
