@@ -54,7 +54,7 @@ public final class ImGuiTest: Sketch {
     }
 
     public func draw() {
-        Window("ImGui Components", options: [.alwaysAutoResize]) {
+        ImWindow("ImGui Components", options: [.alwaysAutoResize]).render {
             VStack {
                 ImText("Frame: \(frameCount)")
                 Divider()
@@ -80,39 +80,31 @@ public final class ImGuiTest: Sketch {
                 ImText("Clicks: \(clickCount)")
             }
         }
-        .render()
 
-        Window("ImGui Plots", options: [.alwaysAutoResize]) {
+        ImWindow("ImGui Plots", options: [.alwaysAutoResize]).render {
             VStack {
-                Block {
-                    if self.showPlot2D {
-                        ImPlot2D(
-                            "Sine Wave",
-                            w: 320,
-                            h: 180,
-                            axis: .init(x: "x", y: "sin(x)")
-                        ) {
-                            plotLine("sin", values: self.plotSamples, xScale: self.plotXScale, yScale: 1.0)
-                        }
-                        .render()
+                if self.showPlot2D {
+                    ImPlot2D(
+                        "Sine Wave",
+                        w: 320,
+                        h: 180,
+                        axis: .init(x: "x", y: "sin(x)")
+                    ) {
+                        plotLine("sin", values: self.plotSamples, xScale: self.plotXScale, yScale: 1.0)
                     }
                 }
-                Block {
-                    if self.showPlot3D {
-                        ImPlot3D(
-                            "Helix 3D",
-                            w: 320,
-                            h: 240,
-                            axis: .init(x: "x", y: "y", z: "z")
-                        ) {
-                            plotLine("helix", xs: self.plot3DX, ys: self.plot3DY, zs: self.plot3DZ)
-                        }
-                        .render()
+                if self.showPlot3D {
+                    ImPlot3D(
+                        "Helix 3D",
+                        w: 320,
+                        h: 240,
+                        axis: .init(x: "x", y: "y", z: "z")
+                    ) {
+                        plotLine("helix", xs: self.plot3DX, ys: self.plot3DY, zs: self.plot3DZ)
                     }
                 }
             }
         }
-        .render()
         
         // Raylib Version Display
         let vText = "Raylib \(App.raylibVersion)"

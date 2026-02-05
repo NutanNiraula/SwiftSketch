@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+#MISE alias="analyze"
+
+set -euo pipefail
+
+mkdir -p .mise-home
+HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize -Xlinker -dead_strip -Xlinker -map -Xlinker output/App.linkmap
+
+python3 - <<'PY'
+import re
+from collections import defaultdict
+
+path = "output/App.linkmap"
+obj = {}
+sum_sizes = defaultdict(int)
+total = 0
+
+with open(path, "r", encoding="utf-8", errors="ignore") as f:
+    in_obj = False
+    in_sym = False
+    for line in f:
+        if line.startswith("# Object files:"):
+            in_obj = True
+            in_sym = False
+            continue
+        if line.startswith("# Sections:"):
+            in_obj = False
+            continue
+        if line.startswith("# Symbols:"):
+            in_sym = True
+            continue
+        if in_obj:
+            m = re.match(r"\[\s*(\d+)\]\s+(.*)", line)
+            if m:
+                obj[int(m.group(1))] = m.group(2).strip()
+        elif in_sym:
+            m = re.match(r"0x[0-9a-fA-F]+\s+0x([0-9a-fA-F]+)\s+\[\s*(\d+)\]\s+", line)
+            if m:
+                size = int(m.group(1), 16)
+                idx = int(m.group(2))
+                sum_sizes[idx] += size
+                total += size
+
+def bucket(name: str) -> str:
+    if "/Sources/CImGui/" in name or "libcimgui.a(" in name:
+        return "CImGui"
+    if "/Sources/CRaylib/" in name or "libraylib.a(" in name:
+        return "CRaylib"
+    if "/SwiftSketchCore.build/" in name:
+        return "SwiftSketchCore"
+    if "/App.build/" in name:
+        return "App"
+    return "Other"
+
+by_bucket = defaultdict(int)
+by_object = []
+for idx, size in sum_sizes.items():
+    name = obj.get(idx, f"[{idx}]")
+    by_bucket[bucket(name)] += size
+    by_object.append((size, name))
+
+print("Linkmap size breakdown")
+print(f"Total symbols size: {total} bytes")
+print("")
+print("By library")
+for name, size in sorted(by_bucket.items(), key=lambda x: x[1], reverse=True):
+    pct = (size / total * 100) if total else 0
+    print(f"{pct:6.2f}%  {size:10}  {name}")
+
+print("")
+print("Top objects")
+for size, name in sorted(by_object, key=lambda x: x[0], reverse=True)[:20]:
+    pct = (size / total * 100) if total else 0
+    print(f"{pct:6.2f}%  {size:10}  {name}")
+PY

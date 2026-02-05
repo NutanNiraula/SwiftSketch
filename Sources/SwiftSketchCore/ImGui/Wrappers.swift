@@ -186,25 +186,19 @@ public enum ViewBuilder {
     public static func buildArray(_ components: [[View]]) -> [View] { components.flatMap { $0 } }
 }
 
-public struct Window: View {
+public struct ImWindow {
     public let title: String
     public let options: ImGuiWindowOptions
-    public let content: [View]
     
-    public init(
-        _ title: String,
-        options: ImGuiWindowOptions = .none,
-        @ViewBuilder content: () -> [View]
-    ) {
+    public init(_ title: String, options: ImGuiWindowOptions = .none) {
         self.title = title
         self.options = options
-        self.content = content()
     }
     
-    public func render() {
+    public func render(@ViewBuilder content: () -> [View]) {
         let opened = igBegin(title, nil, Int32(options.rawValue))
         if opened {
-            content.forEach { $0.render() }
+            content().forEach { $0.render() }
         }
         igEnd()
     }

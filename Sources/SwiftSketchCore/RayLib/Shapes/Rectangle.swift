@@ -7,11 +7,11 @@ public enum Rect {
     }
     
     public static func draw(x: Int, y: Int, w: Int, h: Int) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawRectangle(Int32(x), Int32(y), Int32(w), Int32(h), fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
-            let weight = max(1.0, DrawStyle.strokeWeight)
+        if let strokeColor = Render.strokeColor {
+            let weight = max(1.0, Render.strokeWeight)
             if weight <= 1.0 {
                 DrawRectangleLines(Int32(x), Int32(y), Int32(w), Int32(h), strokeColor)
             } else {
@@ -25,11 +25,11 @@ public enum Rect {
     }
     
     public static func draw(r: Rectangle) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawRectangleRec(r, fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
-            let weight = max(1.0, DrawStyle.strokeWeight)
+        if let strokeColor = Render.strokeColor {
+            let weight = max(1.0, Render.strokeWeight)
             if weight <= 1.0 {
                 DrawRectangleLines(Int32(r.x), Int32(r.y), Int32(r.width), Int32(r.height), strokeColor)
             } else {
@@ -39,7 +39,7 @@ public enum Rect {
     }
     
     public static func fill(x: Int, y: Int, w: Int, h: Int, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawRectangle(Int32(x), Int32(y), Int32(w), Int32(h), fillColor)
     }
 
@@ -51,7 +51,7 @@ public enum Rect {
     }
     
     public static func fill(r: Rectangle, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawRectangleRec(r, fillColor)
     }
     
@@ -60,8 +60,8 @@ public enum Rect {
     }
     
     public static func line(x: Int, y: Int, w: Int, h: Int, t: Double? = nil, color: Color? = nil) {
-        guard let strokeColor = color ?? DrawStyle.strokeColor else { return }
-        let weight = max(1.0, t ?? DrawStyle.strokeWeight)
+        guard let strokeColor = color ?? Render.strokeColor else { return }
+        let weight = max(1.0, t ?? Render.strokeWeight)
         if weight <= 1.0 {
             DrawRectangleLines(Int32(x), Int32(y), Int32(w), Int32(h), strokeColor)
         } else {
@@ -81,8 +81,8 @@ public enum Rect {
     }
     
     public static func line(r: Rectangle, t: Double? = nil, color: Color? = nil) {
-        guard let strokeColor = color ?? DrawStyle.strokeColor else { return }
-        let weight = max(1.0, t ?? DrawStyle.strokeWeight)
+        guard let strokeColor = color ?? Render.strokeColor else { return }
+        let weight = max(1.0, t ?? Render.strokeWeight)
         if weight <= 1.0 {
             DrawRectangleLines(Int32(r.x), Int32(r.y), Int32(r.width), Int32(r.height), strokeColor)
         } else {
@@ -91,7 +91,7 @@ public enum Rect {
     }
     
     public static func vector(xy: Vector2, wh: Vector2, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawRectangleV(xy, wh, fillColor)
     }
     
@@ -100,7 +100,7 @@ public enum Rect {
     }
     
     public static func square(xy: Vector2, s: Double, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawRectangleV(xy, .square(s), fillColor)
     }
     
@@ -121,10 +121,10 @@ public enum Rect {
     }
     
     public static func rounded(r: Rectangle, round: Double, seg: Int) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawRectangleRounded(r, Float(round), Int32(seg), fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
+        if let strokeColor = Render.strokeColor {
             DrawRectangleRoundedLines(
                 r,
                 Float(round),
@@ -140,6 +140,12 @@ public enum Rect {
     
     public static func roundedLine(r: Rectangle, round: Double, seg: Int, color: Color) {
         DrawRectangleRoundedLines(r, Float(round), Int32(seg), color)
+    }
+    
+    public static func roundedLine(r: Rectangle, round: Double, seg: Int, t: Double, color: Color? = nil) {
+        guard let strokeColor = color ?? Render.strokeColor else { return }
+        let weight = max(1.0, t)
+        DrawRectangleRoundedLinesEx(r, Float(round), Int32(seg), Float(weight), strokeColor)
     }
 }
 

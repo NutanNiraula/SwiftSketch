@@ -2,7 +2,7 @@
 #MISE alias="rl"
 
 mkdir -p .mise-home
-HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize
+HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize -Xlinker -dead_strip
 mkdir -p "$output_dir"
 cp "$build_dir/release/$binary_name" "$output_dir/$binary_name"
 cp Sources/CRaylib/libEGL.dylib "$output_dir/"

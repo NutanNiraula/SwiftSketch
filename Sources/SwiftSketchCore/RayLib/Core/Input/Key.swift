@@ -120,3 +120,15 @@ public enum Key: Int {
     
     case unknown = -1
 }
+
+public extension Key {
+    static func isPressed(_ key: Key) -> Bool { IsKeyPressed(Int32(key.rawValue)) }
+    static func isPressedRepeat(_ key: Key) -> Bool { IsKeyPressedRepeat(Int32(key.rawValue)) }
+    static func isDown(_ key: Key) -> Bool { IsKeyDown(Int32(key.rawValue)) }
+    static func isReleased(_ key: Key) -> Bool { IsKeyReleased(Int32(key.rawValue)) }
+    static func isUp(_ key: Key) -> Bool { IsKeyUp(Int32(key.rawValue)) }
+    static func pressed() -> Key { Key(rawValue: Int(GetKeyPressed())) ?? .none }
+    static func charPressed() -> Key { Key(rawValue: Int(GetCharPressed())) ?? .none }
+    static func name(_ key: Key) -> String { String(cString: GetKeyName(Int32(key.rawValue))) }
+    static func setExitKey(_ key: Key) { SetExitKey(Int32(key.rawValue)) }
+}

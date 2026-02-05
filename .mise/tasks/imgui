@@ -44,7 +44,7 @@ MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./im
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui_demo.cpp -o imgui/imgui_demo.o
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui_tables.cpp -o imgui/imgui_tables.o
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -c imgui/imgui_widgets.cpp -o imgui/imgui_widgets.o
-MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../../Sources/CRaylib/include -DIMGUI_IMPL_API='extern "C"' -DIMGUI_IMPL_OPENGL_ES2 -c imgui/backends/imgui_impl_opengl3.cpp -o imgui/backends/imgui_impl_opengl3.o
+MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../Sources/CRaylib/include -DIMGUI_IMPL_API='extern "C"' -DIMGUI_IMPL_OPENGL_ES2 -c imgui/backends/imgui_impl_opengl3.cpp -o imgui/backends/imgui_impl_opengl3.o
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../implot -c ../implot/implot.cpp -o ../implot/implot.o
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../implot -c ../implot/implot_items.cpp -o ../implot/implot_items.o
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../implot -c ../implot/implot_demo.cpp -o ../implot/implot_demo.o
@@ -53,9 +53,9 @@ MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./im
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../cimplot3d/implot3d -c ../cimplot3d/implot3d/implot3d_demo.cpp -o ../cimplot3d/implot3d/implot3d_demo.o
 MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I. -I./imgui -I./imgui/backends -I../cimplot3d/implot3d -c ../cimplot3d/implot3d/implot3d_meshes.cpp -o ../cimplot3d/implot3d/implot3d_meshes.o
 
-mkdir -p cimplot/implot
-cp ../implot/implot.h cimplot/implot/implot.h
-cp ../implot/implot_internal.h cimplot/implot/implot_internal.h
+mkdir -p ../cimplot/implot
+cp ../implot/implot.h ../cimplot/implot/implot.h
+cp ../implot/implot_internal.h ../cimplot/implot/implot_internal.h
 
 cd ../cimplot && MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I../imgui -I../imgui/imgui -I../implot -c cimplot.cpp -o cimplot.o
 cd ../cimplot3d && MACOSX_DEPLOYMENT_TARGET=11.0 c++ -O2 -fno-exceptions -fno-rtti -Wall -I../imgui -I../imgui/imgui -I./implot3d -c cimplot3d.cpp -o cimplot3d.o

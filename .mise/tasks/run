@@ -2,4 +2,6 @@
 #MISE alias="rn"
 #MISE depends=["build"]
 
-"$output_dir/$binary_name"
+cp Sources/CRaylib/libEGL.dylib "$build_dir/debug/" 2>/dev/null || true
+cp Sources/CRaylib/libGLESv2.dylib "$build_dir/debug/" 2>/dev/null || true
+"$build_dir/debug/$binary_name"

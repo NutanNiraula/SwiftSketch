@@ -27,16 +27,15 @@ public final class SampleSketch: Sketch {
     // Called every frame to render
     public func draw() {
         // 1. Clear the background
-        clearBackground(.rayWhite)
+        Render.clearBackground(.rayWhite)
         
         // 2. Draw shapes (using high-level wrappers)
         Rect.fill([Int(xPos), 360, 50, 50], color: .orange)
         Text.draw("Hello SwiftSketch!", xy: [100, 20], size: 24, color: .gray)
         
         // 3. Draw UI (Immediate Mode)
-        Window("Controls") {
+        ImWindow("Controls").render {
             ImText("Position: \(xPos)")
         }
-        .render()
     }
 }

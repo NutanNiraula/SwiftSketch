@@ -62,7 +62,7 @@ public enum App {
         draw: () -> Void,
         unload: () -> Void = {}
     ) {
-        setExitKey(.escape)
+        Key.setExitKey(.escape)
         let resolvedShowFPS = showFPS ?? defaultShowFPS
         
         if imguiEnabled && !ImGuiCore.isInitialized {
@@ -71,21 +71,21 @@ public enum App {
         
         while !WindowShouldClose() {
             update()
-            beginDrawing()
+            Render.beginDrawing()
             if let color = App.backgroundColor {
-                clearBackground(color)
+                Render.clearBackground(color)
             }
             if imguiEnabled {
                 ImGuiCore.newFrame()
             }
             draw()
             if resolvedShowFPS {
-                drawFPS(10, 10)
+                Render.drawFPS(x: 10, y: 10)
             }
             if imguiEnabled {
                 ImGuiCore.render()
             }
-            endDrawing()
+            Render.endDrawing()
         }
         unload()
         if imguiEnabled {

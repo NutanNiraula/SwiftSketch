@@ -7,16 +7,16 @@ public enum Circle {
     }
     
     public static func draw(x: Int, y: Int, r: Double) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawCircle(Int32(x), Int32(y), Float(r), fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
+        if let strokeColor = Render.strokeColor {
             DrawCircleLines(Int32(x), Int32(y), Float(r), strokeColor)
         }
     }
     
     public static func fill(x: Int, y: Int, r: Double, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawCircle(Int32(x), Int32(y), Float(r), fillColor)
     }
     
@@ -28,7 +28,7 @@ public enum Circle {
     }
     
     public static func line(x: Int, y: Int, r: Double, color: Color? = nil) {
-        guard let strokeColor = color ?? DrawStyle.strokeColor else { return }
+        guard let strokeColor = color ?? Render.strokeColor else { return }
         DrawCircleLines(Int32(x), Int32(y), Float(r), strokeColor)
     }
     
@@ -40,8 +40,13 @@ public enum Circle {
     }
     
     public static func vector(xy: Vector2, r: Double, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawCircleV(xy, Float(r), fillColor)
+    }
+    
+    public static func line(xy: Vector2, r: Double, color: Color? = nil) {
+        guard let strokeColor = color ?? Render.strokeColor else { return }
+        DrawCircleLinesV(xy, Float(r), strokeColor)
     }
     
     public static func gradient(x: Int, y: Int, r: Double, color1: Color, color2: Color) {
@@ -106,16 +111,16 @@ public enum Ellipse {
     }
     
     public static func draw(x: Int, y: Int, rx: Double, ry: Double) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawEllipse(Int32(x), Int32(y), Float(rx), Float(ry), fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
+        if let strokeColor = Render.strokeColor {
             DrawEllipseLines(Int32(x), Int32(y), Float(rx), Float(ry), strokeColor)
         }
     }
     
     public static func fill(x: Int, y: Int, rx: Double, ry: Double, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawEllipse(Int32(x), Int32(y), Float(rx), Float(ry), fillColor)
     }
     
@@ -127,7 +132,7 @@ public enum Ellipse {
     }
     
     public static func line(x: Int, y: Int, rx: Double, ry: Double, color: Color? = nil) {
-        guard let strokeColor = color ?? DrawStyle.strokeColor else { return }
+        guard let strokeColor = color ?? Render.strokeColor else { return }
         DrawEllipseLines(Int32(x), Int32(y), Float(rx), Float(ry), strokeColor)
     }
     
@@ -139,7 +144,12 @@ public enum Ellipse {
     }
     
     public static func vector(xy: Vector2, rx: Double, ry: Double, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
-        DrawEllipse(Int32(xy.x), Int32(xy.y), Float(rx), Float(ry), fillColor)
+        guard let fillColor = color ?? Render.fillColor else { return }
+        DrawEllipseV(xy, Float(rx), Float(ry), fillColor)
+    }
+    
+    public static func line(xy: Vector2, rx: Double, ry: Double, color: Color? = nil) {
+        guard let strokeColor = color ?? Render.strokeColor else { return }
+        DrawEllipseLinesV(xy, Float(rx), Float(ry), strokeColor)
     }
 }

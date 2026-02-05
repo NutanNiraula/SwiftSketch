@@ -3,16 +3,13 @@
 #MISE alias="rlib"
 
 rm -rf raylib
-rm -rf raygui
 git clone --depth 1 --branch main https://github.com/raysan5/raylib.git raylib || (rm -rf raylib && git clone --depth 1 --branch master https://github.com/raysan5/raylib.git raylib)
-git clone --depth 1 https://github.com/raysan5/raygui.git raygui
 export MACOSX_DEPLOYMENT_TARGET=10.9 && cd raylib/src && make GRAPHICS=GRAPHICS_API_OPENGL_ES2
 mkdir -p ../../Sources/CRaylib/include
 cp libraylib.a ../../Sources/CRaylib/libraylib.a
 cp raylib.h ../../Sources/CRaylib/include/
 cp raymath.h ../../Sources/CRaylib/include/
 cp rlgl.h ../../Sources/CRaylib/include/
-cp ../../raygui/src/raygui.h ../../Sources/CRaylib/include/
 
 # Go back to project root
 cd ../..

@@ -70,6 +70,15 @@ This project uses [mise](https://mise.jdx.dev/) for task management and dependen
   mise c
   ```
 
+## API Design
+This is immediate mode UI. So my api design is to double down on functions rather than objects and lean on swift features for convenience. Some high level design goals are as follows.
+
+- Functions for hotpath
+- Enum Namespaces for reusability
+- Result builders for composability
+- Convenience extensions for common tasks
+- Convenience use of ExpressibleAsArrayLiteral for quick sketches (not recommended for production use)
+
 ## Sample Code
 
 SwiftSketch follows the classic `setup` -> `update` -> `draw` loop found in frameworks like Processing. To create a sketch, conform to the `Sketch` protocol.
@@ -111,10 +120,9 @@ public final class SampleSketch: Sketch {
         Text.draw("Hello SwiftSketch!", xy: [100, 20], size: 24, color: .gray)
         
         // 3. Draw UI (Immediate Mode)
-        Window("Controls") {
+        Window("Controls").render {
             ImText("Position: \(xPos)")
         }
-        .render()
     }
 }
 

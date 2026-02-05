@@ -4,7 +4,6 @@
 /output/
 /raylib/
 /imgui/
-/raygui/
 imgui.ini
 
 # Generated C Library Artifacts
@@ -12,7 +11,6 @@ Sources/CRaylib/libraylib.a
 Sources/CRaylib/include/raylib.h
 Sources/CRaylib/include/raymath.h
 Sources/CRaylib/include/rlgl.h
-Sources/CRaylib/include/raygui.h
 Sources/CRaylib/libEGL.dylib
 Sources/CRaylib/libGLESv2.dylib
 

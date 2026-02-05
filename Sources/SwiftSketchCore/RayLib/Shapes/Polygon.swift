@@ -1,32 +1,32 @@
 public enum Triangle {
     public static func draw(a: Vector2, b: Vector2, c: Vector2) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawTriangle(a, b, c, fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
+        if let strokeColor = Render.strokeColor {
             DrawTriangleLines(a, b, c, strokeColor)
         }
     }
     
     public static func fill(a: Vector2, b: Vector2, c: Vector2, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawTriangle(a, b, c, fillColor)
     }
     
     public static func line(a: Vector2, b: Vector2, c: Vector2, color: Color? = nil) {
-        guard let strokeColor = color ?? DrawStyle.strokeColor else { return }
+        guard let strokeColor = color ?? Render.strokeColor else { return }
         DrawTriangleLines(a, b, c, strokeColor)
     }
 }
 
 public enum Quad {
     public static func draw(a: Vector2, b: Vector2, c: Vector2, d: Vector2) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawTriangle(a, b, c, fillColor)
             DrawTriangle(a, c, d, fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
-            let weight = max(1.0, DrawStyle.strokeWeight)
+        if let strokeColor = Render.strokeColor {
+            let weight = max(1.0, Render.strokeWeight)
             if weight <= 1.0 {
                 DrawLineV(a, b, strokeColor)
                 DrawLineV(b, c, strokeColor)
@@ -42,14 +42,14 @@ public enum Quad {
     }
     
     public static func fill(a: Vector2, b: Vector2, c: Vector2, d: Vector2, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawTriangle(a, b, c, fillColor)
         DrawTriangle(a, c, d, fillColor)
     }
     
     public static func line(a: Vector2, b: Vector2, c: Vector2, d: Vector2, t: Double? = nil, color: Color? = nil) {
-        guard let strokeColor = color ?? DrawStyle.strokeColor else { return }
-        let weight = max(1.0, t ?? DrawStyle.strokeWeight)
+        guard let strokeColor = color ?? Render.strokeColor else { return }
+        let weight = max(1.0, t ?? Render.strokeWeight)
         if weight <= 1.0 {
             DrawLineV(a, b, strokeColor)
             DrawLineV(b, c, strokeColor)
@@ -111,11 +111,11 @@ public enum Polygon {
         @PolygonBuilder _ points: () -> [Vector2]
     ) {
         let resolved = points()
-        if kind == .closed, let fillColor = DrawStyle.fillColor {
+        if kind == .closed, let fillColor = Render.fillColor {
             fillTriangles(points: resolved, color: fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
-            let weight = max(1.0, t ?? DrawStyle.strokeWeight)
+        if let strokeColor = Render.strokeColor {
+            let weight = max(1.0, t ?? Render.strokeWeight)
             strokeLines(points: resolved, closed: kind == .closed, weight: weight, color: strokeColor)
         }
     }
@@ -140,26 +140,44 @@ public enum Polygon {
     }
     
     public static func draw(xy: Vector2, sides: Int, r: Double, rot: Double = 0) {
-        if let fillColor = DrawStyle.fillColor {
+        if let fillColor = Render.fillColor {
             DrawPoly(xy, Int32(sides), Float(r), Float(rot), fillColor)
         }
-        if let strokeColor = DrawStyle.strokeColor {
+        if let strokeColor = Render.strokeColor {
             DrawPolyLines(xy, Int32(sides), Float(r), Float(rot), strokeColor)
         }
     }
     
     public static func fill(xy: Vector2, sides: Int, r: Double, rot: Double = 0, color: Color? = nil) {
-        guard let fillColor = color ?? DrawStyle.fillColor else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
         DrawPoly(xy, Int32(sides), Float(r), Float(rot), fillColor)
     }
     
     public static func line(xy: Vector2, sides: Int, r: Double, rot: Double = 0, t: Double? = nil, color: Color? = nil) {
-        guard let strokeColor = color ?? DrawStyle.strokeColor else { return }
-        let weight = max(1.0, t ?? DrawStyle.strokeWeight)
+        guard let strokeColor = color ?? Render.strokeColor else { return }
+        let weight = max(1.0, t ?? Render.strokeWeight)
         if weight <= 1.0 {
             DrawPolyLines(xy, Int32(sides), Float(r), Float(rot), strokeColor)
         } else {
             DrawPolyLinesEx(xy, Int32(sides), Float(r), Float(rot), Float(weight), strokeColor)
+        }
+    }
+    
+    public static func triangleFan(_ points: [Vector2], color: Color? = nil) {
+        guard points.count >= 3 else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
+        points.withUnsafeBufferPointer { buffer in
+            guard let base = buffer.baseAddress else { return }
+            DrawTriangleFan(base, Int32(buffer.count), fillColor)
+        }
+    }
+    
+    public static func triangleStrip(_ points: [Vector2], color: Color? = nil) {
+        guard points.count >= 3 else { return }
+        guard let fillColor = color ?? Render.fillColor else { return }
+        points.withUnsafeBufferPointer { buffer in
+            guard let base = buffer.baseAddress else { return }
+            DrawTriangleStrip(base, Int32(buffer.count), fillColor)
         }
     }
     
