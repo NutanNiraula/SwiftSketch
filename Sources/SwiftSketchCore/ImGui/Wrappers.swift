@@ -1,3 +1,10 @@
+#if SS_MINIMAL || SS_NO_IMGUI
+public enum ImGuiTheme {
+    case dark
+    case light
+    case classic
+}
+#else
 import Foundation
 import CRaylib
 import CImGui
@@ -1114,3 +1121,4 @@ enum ImGuiCore {
         isInitialized = false
     }
 }
+#endif

@@ -18,7 +18,7 @@ public enum Shader {
         case ints([Int32], type: ShaderUniformDataType)
         case uints([UInt32], type: ShaderUniformDataType)
         case matrix(Matrix)
-        case texture(Texture)
+        case texture(Texture2D)
     }
 
     public static func begin(_ shader: CRaylib.Shader) {

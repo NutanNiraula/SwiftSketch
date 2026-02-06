@@ -1,8 +1,38 @@
 #!/usr/bin/env bash
 #MISE alias="bl"
 
+ss_minimal="${SS_MINIMAL:-0}"
+ss_no_audio="${SS_NO_AUDIO:-0}"
+ss_no_models="${SS_NO_MODELS:-0}"
+ss_no_textures="${SS_NO_TEXTURES:-0}"
+ss_no_imgui="${SS_NO_IMGUI:-0}"
+for arg in "$@"; do
+  case "$arg" in
+    --minimal|--ss-minimal) ss_minimal=1 ;;
+    --no-audio) ss_no_audio=1 ;;
+    --no-models) ss_no_models=1 ;;
+    --no-textures) ss_no_textures=1 ;;
+    --no-imgui) ss_no_imgui=1 ;;
+  esac
+done
 mkdir -p .mise-home
-HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build --disable-sandbox
+extra_flags=()
+if [[ "$ss_minimal" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_MINIMAL")
+fi
+if [[ "$ss_no_audio" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_AUDIO")
+fi
+if [[ "$ss_no_models" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_MODELS")
+fi
+if [[ "$ss_no_textures" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_TEXTURES")
+fi
+if [[ "$ss_no_imgui" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_IMGUI")
+fi
+HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build --disable-sandbox "${extra_flags[@]}"
 mkdir -p "$output_dir"
 cp "$build_dir/debug/$binary_name" "$output_dir/$binary_name"
 cp Sources/CRaylib/libEGL.dylib "$output_dir/"

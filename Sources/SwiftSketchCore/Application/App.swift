@@ -16,8 +16,10 @@ public enum App {
     private static var defaultTitle = "SwiftSketch"
     private static var defaultShowFPS = true
     private static var imguiEnabled = false
+#if !SS_MINIMAL && !SS_NO_IMGUI
     private static var imguiTheme: ImGuiTheme = .dark
     private static var imguiGlslVersion = "#version 100"
+#endif
 
     public static var raylibVersion: String {
         return "5.6-dev"
@@ -48,12 +50,17 @@ public enum App {
         theme: ImGuiTheme = .dark,
         glslVersion: String = "#version 100"
     ) {
+#if !SS_MINIMAL && !SS_NO_IMGUI
         imguiEnabled = true
         imguiTheme = theme
         imguiGlslVersion = glslVersion
         if IsWindowReady() {
             ImGuiCore.initialize(theme: imguiTheme, glslVersion: imguiGlslVersion)
         }
+#else
+        _ = theme
+        _ = glslVersion
+#endif
     }
 
     private static func run(
@@ -65,9 +72,11 @@ public enum App {
         Key.setExitKey(.escape)
         let resolvedShowFPS = showFPS ?? defaultShowFPS
         
+#if !SS_MINIMAL && !SS_NO_IMGUI
         if imguiEnabled && !ImGuiCore.isInitialized {
             ImGuiCore.initialize(theme: imguiTheme, glslVersion: imguiGlslVersion)
         }
+#endif
         
         while !WindowShouldClose() {
             update()
@@ -75,22 +84,28 @@ public enum App {
             if let color = App.backgroundColor {
                 Render.clearBackground(color)
             }
+#if !SS_MINIMAL && !SS_NO_IMGUI
             if imguiEnabled {
                 ImGuiCore.newFrame()
             }
+#endif
             draw()
             if resolvedShowFPS {
                 Render.drawFPS(x: 10, y: 10)
             }
+#if !SS_MINIMAL && !SS_NO_IMGUI
             if imguiEnabled {
                 ImGuiCore.render()
             }
+#endif
             Render.endDrawing()
         }
         unload()
+#if !SS_MINIMAL && !SS_NO_IMGUI
         if imguiEnabled {
             ImGuiCore.shutdown()
         }
+#endif
         CloseWindow()
     }
 

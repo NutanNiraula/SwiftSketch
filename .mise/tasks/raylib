@@ -4,7 +4,41 @@
 
 rm -rf raylib
 git clone --depth 1 --branch main https://github.com/raysan5/raylib.git raylib || (rm -rf raylib && git clone --depth 1 --branch master https://github.com/raysan5/raylib.git raylib)
-export MACOSX_DEPLOYMENT_TARGET=10.9 && cd raylib/src && make GRAPHICS=GRAPHICS_API_OPENGL_ES2
+ss_no_rglfw="${SS_NO_RGLFW:-0}"
+for arg in "$@"; do
+    case "$arg" in
+        --no-rglfw) ss_no_rglfw=1 ;;
+    esac
+done
+disable_defs=()
+if [[ -n "${SS_RAYLIB_DISABLE:-}" ]]; then
+    IFS=',' read -ra parts <<< "${SS_RAYLIB_DISABLE}"
+    for part in "${parts[@]}"; do
+        case "$part" in
+            audio) disable_defs+=("-DSUPPORT_MODULE_RAUDIO=0") ;;
+            models) disable_defs+=("-DSUPPORT_MODULE_RMODELS=0") ;;
+            textures) disable_defs+=("-DSUPPORT_MODULE_RTEXTURES=0") ;;
+            text) disable_defs+=("-DSUPPORT_MODULE_RTEXT=0") ;;
+            shapes) disable_defs+=("-DSUPPORT_MODULE_RSHAPES=0") ;;
+            core) disable_defs+=("-DSUPPORT_MODULE_RCORE=0") ;;
+            rglfw) ss_no_rglfw=1 ;;
+        esac
+    done
+fi
+if [[ "${SS_NO_AUDIO:-}" == "1" ]]; then
+    disable_defs+=("-DSUPPORT_MODULE_RAUDIO=0")
+fi
+if [[ "${SS_NO_MODELS:-}" == "1" ]]; then
+    disable_defs+=("-DSUPPORT_MODULE_RMODELS=0")
+fi
+if [[ "${SS_NO_TEXTURES:-}" == "1" ]]; then
+    disable_defs+=("-DSUPPORT_MODULE_RTEXTURES=0")
+fi
+custom_cflags="${disable_defs[*]}"
+export MACOSX_DEPLOYMENT_TARGET=10.9 && cd raylib/src && make GRAPHICS=GRAPHICS_API_OPENGL_ES2 CUSTOM_CFLAGS="$custom_cflags"
+if [[ "$ss_no_rglfw" == "1" ]]; then
+    ar -d libraylib.a rglfw.o || true
+fi
 mkdir -p ../../Sources/CRaylib/include
 cp libraylib.a ../../Sources/CRaylib/libraylib.a
 cp raylib.h ../../Sources/CRaylib/include/

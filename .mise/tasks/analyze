@@ -3,8 +3,42 @@
 
 set -euo pipefail
 
+ss_minimal="${SS_MINIMAL:-0}"
+ss_no_audio="${SS_NO_AUDIO:-0}"
+ss_no_models="${SS_NO_MODELS:-0}"
+ss_no_textures="${SS_NO_TEXTURES:-0}"
+ss_no_imgui="${SS_NO_IMGUI:-0}"
+for arg in "$@"; do
+  case "$arg" in
+    --minimal|--ss-minimal) ss_minimal=1 ;;
+    --no-audio) ss_no_audio=1 ;;
+    --no-models) ss_no_models=1 ;;
+    --no-textures) ss_no_textures=1 ;;
+    --no-imgui) ss_no_imgui=1 ;;
+  esac
+done
 mkdir -p .mise-home
-HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize -Xlinker -dead_strip -Xlinker -map -Xlinker output/App.linkmap
+extra_flags=()
+if [[ "$ss_minimal" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_MINIMAL")
+fi
+if [[ "$ss_no_audio" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_AUDIO")
+fi
+if [[ "$ss_no_models" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_MODELS")
+fi
+if [[ "$ss_no_textures" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_TEXTURES")
+fi
+if [[ "$ss_no_imgui" == "1" ]]; then
+  extra_flags+=("-Xswiftc" "-DSS_NO_IMGUI")
+fi
+if ((${#extra_flags[@]})); then
+  HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize -Xlinker -dead_strip -Xlinker -map -Xlinker output/App.linkmap "${extra_flags[@]}"
+else
+  HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift build -c release --disable-sandbox -Xswiftc -Osize -Xlinker -dead_strip -Xlinker -map -Xlinker output/App.linkmap
+fi
 
 python3 - <<'PY'
 import re
@@ -72,4 +106,25 @@ print("Top objects")
 for size, name in sorted(by_object, key=lambda x: x[0], reverse=True)[:20]:
     pct = (size / total * 100) if total else 0
     print(f"{pct:6.2f}%  {size:10}  {name}")
+print("")
+targets = {
+    "rmodels.o": "Models",
+    "rtextures.o": "Textures",
+    "raudio.o": "Audio",
+    "rtext.o": "Text",
+    "rshapes.o": "Shapes",
+    "rcore.o": "Core",
+    "rglfw.o": "RGLFW"
+}
+hits = []
+for size, name in by_object:
+    for key, label in targets.items():
+        if key in name:
+            hits.append((size, label, name))
+for size, label, name in sorted(hits, key=lambda x: x[0], reverse=True):
+    pct = (size / total * 100) if total else 0
+    print(f"{pct:6.2f}%  {size:10}  {label}  {name}")
+print("")
+print("Disable flags (Swift): SS_NO_AUDIO=1 SS_NO_MODELS=1 SS_NO_TEXTURES=1 SS_NO_IMGUI=1")
+print("Disable flags (raylib rebuild): SS_RAYLIB_DISABLE=audio,models,textures,rglfw mise rlib")
 PY

@@ -48,7 +48,7 @@ This project uses [mise](https://mise.jdx.dev/) for task management and dependen
 
 ## Performance & Size
 
-- **Binary Size**: The standalone binary is lightweight (~1 MB). When bundled with ANGLE libraries for Metal support, the total size is approximately **8 MB**.
+- **Binary Size**: The standalone binary is lightweight (< 1 MB - 2 MB). When bundled with ANGLE libraries for Metal support, the total size is approximately **8 MB**.
 - **Performance**: Capable of rendering **100,000 rectangles at 140 FPS** on an Apple M3 Max (Release Mode).
 
 ### Commands
@@ -62,6 +62,12 @@ This project uses [mise](https://mise.jdx.dev/) for task management and dependen
   mise bl
   ```
 - **Release** (Optimized release build):
+Flags: 
+--minimal : Build without models, textures, and imgui.
+--no-audio : Build without audio support.
+--no-models : Build without model loading support.
+--no-textures : Build without texture loading support.
+--no-imgui : Build without ImGui support.
   ```bash
   mise rl
   ```
