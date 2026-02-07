@@ -58,6 +58,12 @@ let app = Target.executableTarget(
     ]
 )
 
+let swiftUIApp = Target.executableTarget(
+    name: "SwiftUIApp",
+    dependencies: ["SwiftSketchCore"],
+    path: "Sources/SwiftUIApp"
+)
+
 let package = Package(
     name: "SwiftC",
     platforms: [
@@ -82,13 +88,18 @@ let package = Package(
         .executable(
             name: "App",
             targets: ["App"]
+        ),
+        .executable(
+            name: "SwiftUIApp",
+            targets: ["SwiftUIApp"]
         )
     ],
     targets: [
         cRaylib,
         cImGui,
         swiftSketchCore,
-        app
+        app,
+        swiftUIApp
     ]
 )
 

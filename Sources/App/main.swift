@@ -1,3 +1,3 @@
 import SwiftSketchCore
 
-App.run(sketch: ImGuiTest())
+App.run(sketch: PerformanceTest())

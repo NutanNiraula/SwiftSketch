@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE alias="rnui"
+
+HOME=$PWD/.mise-home SWIFTPM_CONFIG_DIR=.swiftpm SWIFTPM_SECURITY_DIR=.swiftpm swift run SwiftUIApp
