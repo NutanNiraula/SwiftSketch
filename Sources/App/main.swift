@@ -1,3 +1,3 @@
 import SwiftSketchCore
 
-App.run(sketch: PerformanceTest())
+App.run(sketch: AnimShowcaseSketch())

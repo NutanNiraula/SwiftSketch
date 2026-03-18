@@ -689,6 +689,22 @@ public struct ImPlot3DLineOptions: OptionSet {
     public static let skipNaN = ImPlot3DLineOptions(rawValue: 1 << 12)
 }
 
+private func makeImPlotSpec(options: ImPlotLineOptions, stride: Int32) -> ImPlotSpec_c {
+    var spec = ImPlotSpec_c()
+    spec.Offset = 0
+    spec.Stride = stride
+    spec.Flags = options.rawValue
+    return spec
+}
+
+private func makeImPlot3DSpec(options: ImPlot3DLineOptions, stride: Int32) -> ImPlot3DSpec_c {
+    var spec = ImPlot3DSpec_c()
+    spec.Offset = 0
+    spec.Stride = stride
+    spec.Flags = options.rawValue
+    return spec
+}
+
 public struct ImPlotAxis2D {
     public let x: String
     public let y: String
@@ -949,7 +965,8 @@ public enum ImPlotUI {
     ) {
         values.withUnsafeBufferPointer { buffer in
             guard let base = buffer.baseAddress else { return }
-            ImPlot_PlotLine_doublePtrInt(label, base, Int32(buffer.count), xScale, xStart, options.rawValue, 0, Int32(MemoryLayout<Double>.stride))
+            let spec = makeImPlotSpec(options: options, stride: Int32(MemoryLayout<Double>.stride))
+            ImPlot_PlotLine_doublePtrInt(label, base, Int32(buffer.count), xScale, xStart, spec)
         }
     }
 
@@ -962,7 +979,8 @@ public enum ImPlotUI {
     ) {
         values.withUnsafeBufferPointer { buffer in
             guard let base = buffer.baseAddress else { return }
-            ImPlot_PlotScatter_doublePtrInt(label, base, Int32(buffer.count), xScale, xStart, options.rawValue, 0, Int32(MemoryLayout<Double>.stride))
+            let spec = makeImPlotSpec(options: options, stride: Int32(MemoryLayout<Double>.stride))
+            ImPlot_PlotScatter_doublePtrInt(label, base, Int32(buffer.count), xScale, xStart, spec)
         }
     }
 }
@@ -1016,7 +1034,8 @@ public enum ImPlot3DUI {
                           let zBase = zBuffer.baseAddress else { return }
                     let count = min(xBuffer.count, yBuffer.count, zBuffer.count)
                     if count == 0 { return }
-                    ImPlot3D_PlotLine_doublePtr(label, xBase, yBase, zBase, Int32(count), options.rawValue, 0, Int32(MemoryLayout<Double>.stride))
+                    let spec = makeImPlot3DSpec(options: options, stride: Int32(MemoryLayout<Double>.stride))
+                    ImPlot3D_PlotLine_doublePtr(label, xBase, yBase, zBase, Int32(count), spec)
                 }
             }
         }
@@ -1037,7 +1056,8 @@ public enum ImPlot3DUI {
                           let zBase = zBuffer.baseAddress else { return }
                     let count = min(xBuffer.count, yBuffer.count, zBuffer.count)
                     if count == 0 { return }
-                    ImPlot3D_PlotScatter_doublePtr(label, xBase, yBase, zBase, Int32(count), options.rawValue, 0, Int32(MemoryLayout<Double>.stride))
+                    let spec = makeImPlot3DSpec(options: options, stride: Int32(MemoryLayout<Double>.stride))
+                    ImPlot3D_PlotScatter_doublePtr(label, xBase, yBase, zBase, Int32(count), spec)
                 }
             }
         }

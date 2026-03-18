@@ -21,6 +21,7 @@ public extension Mesh {
         vboId: UnsafeMutablePointer<UInt32>? = nil
     ) {
         self.init()
+        _ = boneMatrices
         self.vertexCount = Int32(vertexCount)
         self.triangleCount = Int32(triangleCount)
         self.vertices = vertices
@@ -32,9 +33,8 @@ public extension Mesh {
         self.indices = indices
         self.animVertices = animVertices
         self.animNormals = animNormals
-        self.boneIds = boneIds
+        self.boneIndices = boneIds
         self.boneWeights = boneWeights
-        self.boneMatrices = boneMatrices
         self.boneCount = Int32(boneCount)
         self.vaoId = UInt32(vaoId)
         self.vboId = vboId

@@ -386,15 +386,7 @@ public enum Models {
     }
     
     public static func updateModelAnimation(_ model: Model, anim: ModelAnimation, frame: Int) {
-        UpdateModelAnimation(model, anim, Int32(frame))
-    }
-    
-    public static func updateModelAnimationBones(_ model: Model, anim: ModelAnimation, frame: Int) {
-        UpdateModelAnimationBones(model, anim, Int32(frame))
-    }
-    
-    public static func unloadModelAnimation(_ anim: ModelAnimation) {
-        UnloadModelAnimation(anim)
+        UpdateModelAnimation(model, anim, Float(frame))
     }
     
     public static func unloadModelAnimations(_ animations: UnsafeMutablePointer<ModelAnimation>?, animCount: Int) {

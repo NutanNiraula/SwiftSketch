@@ -19,12 +19,13 @@ public extension Model {
         self.meshes = meshes
         self.materials = materials
         self.meshMaterial = meshMaterial
-        self.boneCount = Int32(boneCount)
-        self.bones = bones
-        self.bindPose = bindPose
+        self.skeleton = ModelSkeleton()
+        self.skeleton.boneCount = Int32(boneCount)
+        self.skeleton.bones = bones
+        self.skeleton.bindPose = bindPose
     }
     
     var isAnimated: Bool {
-        boneCount > 0
+        skeleton.boneCount > 0
     }
 }

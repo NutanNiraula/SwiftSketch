@@ -9,15 +9,15 @@ public extension ModelAnimation {
         name: String = ""
     ) {
         self.init()
+        _ = bones
         self.boneCount = Int32(boneCount)
-        self.frameCount = Int32(frameCount)
-        self.bones = bones
-        self.framePoses = framePoses
+        self.keyframeCount = Int32(frameCount)
+        self.keyframePoses = framePoses
         self.name = makeNameBuffer(name)
     }
     
     var hasFrames: Bool {
-        frameCount > 0
+        keyframeCount > 0
     }
 }
 
