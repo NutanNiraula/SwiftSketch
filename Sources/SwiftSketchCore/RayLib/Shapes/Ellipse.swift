@@ -50,7 +50,7 @@ public enum Circle {
     }
     
     public static func gradient(x: Int, y: Int, r: Double, color1: Color, color2: Color) {
-        DrawCircleGradient(Int32(x), Int32(y), Float(r), color1, color2)
+        DrawCircleGradient(Vector2(x: Float(x), y: Float(y)), Float(r), color1, color2)
     }
     
     public static func sector(

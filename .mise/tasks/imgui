@@ -1,14 +1,27 @@
 #!/usr/bin/env bash
-#MISE description="Fetch latest cimgui and build static library"
+#MISE description="Fetch pinned cimgui/imgui/implot bindings and build static library"
 #MISE alias="imgui"
+
+cimgui_ref="${SS_CIMGUI_REF:-1e3cfe71570544d9b2ee5aaccee98cf248375d21}"
+imgui_ref="${SS_IMGUI_REF:-f5f6ca07be7ce0ea9eed6c04d55833bac3f6b50b}"
+imgui_tag="${SS_IMGUI_TAG:-}"
+implot_tag="${SS_IMPLOT_TAG:-v1.0}"
+cimplot_tag="${SS_CIMPLOT_TAG:-v1.0}"
+cimplot3d_tag="${SS_CIMPLOT3D_TAG:-v0.4}"
 
 rm -rf imgui implot cimplot cimplot3d
 git clone --depth 1 https://github.com/cimgui/cimgui.git imgui
-git clone --depth 1 https://github.com/epezent/implot.git implot
-git clone --depth 1 https://github.com/cimgui/cimplot.git cimplot
-git clone --depth 1 https://github.com/cimgui/cimplot3d.git cimplot3d
+cd imgui && git fetch --depth 1 origin "$cimgui_ref" && git checkout "$cimgui_ref" && cd ..
+git clone --depth 1 --branch "$implot_tag" https://github.com/epezent/implot.git implot
+git clone --depth 1 --branch "$cimplot_tag" https://github.com/cimgui/cimplot.git cimplot
+git clone --depth 1 --branch "$cimplot3d_tag" https://github.com/cimgui/cimplot3d.git cimplot3d
 cd imgui && git submodule update --init --depth 1
-cd ../cimplot3d && git submodule update --init --depth 1
+if [[ -n "$imgui_tag" ]]; then
+    cd imgui && git fetch --depth 1 origin "refs/tags/$imgui_tag" && git checkout "$imgui_tag" && cd ../..
+else
+    cd imgui && git fetch --depth 1 origin "$imgui_ref" && git checkout "$imgui_ref" && cd ../..
+fi
+cd cimplot3d && git submodule update --init --depth 1
 cd ..
 
 python3 - <<'PY'

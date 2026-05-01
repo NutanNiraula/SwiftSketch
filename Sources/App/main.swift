@@ -1,3 +1,3 @@
 import SwiftSketchCore
 
-App.run(sketch: AnimShowcaseSketch())
+App.run(sketch: ImGuiTest())

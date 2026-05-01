@@ -22,7 +22,7 @@ public enum App {
 #endif
 
     public static var raylibVersion: String {
-        return "5.6-dev"
+        "\(RAYLIB_VERSION_MAJOR).\(RAYLIB_VERSION_MINOR).\(RAYLIB_VERSION_PATCH)"
     }
 
     public static func initWindow(

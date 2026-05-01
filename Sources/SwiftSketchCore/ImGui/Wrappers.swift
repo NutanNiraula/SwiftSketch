@@ -691,6 +691,10 @@ public struct ImPlot3DLineOptions: OptionSet {
 
 private func makeImPlotSpec(options: ImPlotLineOptions, stride: Int32) -> ImPlotSpec_c {
     var spec = ImPlotSpec_c()
+    if let base = ImPlotSpec_ImPlotSpec() {
+        spec = base.pointee
+        ImPlotSpec_destroy(base)
+    }
     spec.Offset = 0
     spec.Stride = stride
     spec.Flags = options.rawValue
@@ -699,6 +703,10 @@ private func makeImPlotSpec(options: ImPlotLineOptions, stride: Int32) -> ImPlot
 
 private func makeImPlot3DSpec(options: ImPlot3DLineOptions, stride: Int32) -> ImPlot3DSpec_c {
     var spec = ImPlot3DSpec_c()
+    if let base = ImPlot3DSpec_ImPlot3DSpec() {
+        spec = base.pointee
+        ImPlot3DSpec_destroy(base)
+    }
     spec.Offset = 0
     spec.Stride = stride
     spec.Flags = options.rawValue

@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-#MISE description="Fetch latest raylib main and build static library with Angle (OpenGL ES 2.0)"
+#MISE description="Fetch pinned raylib/raygui releases and build static library with Angle (OpenGL ES 2.0)"
 #MISE alias="rlib"
 
-rm -rf raylib
-git clone --depth 1 --branch main https://github.com/raysan5/raylib.git raylib || (rm -rf raylib && git clone --depth 1 --branch master https://github.com/raysan5/raylib.git raylib)
+raylib_tag="${SS_RAYLIB_TAG:-6.0}"
+raygui_tag="${SS_RAYGUI_TAG:-4.0}"
+
+rm -rf raylib raygui
+git clone --depth 1 --branch "$raylib_tag" https://github.com/raysan5/raylib.git raylib
+git clone --depth 1 --branch "$raygui_tag" https://github.com/raysan5/raygui.git raygui
 ss_no_rglfw="${SS_NO_RGLFW:-0}"
 for arg in "$@"; do
     case "$arg" in
@@ -44,6 +48,14 @@ cp libraylib.a ../../Sources/CRaylib/libraylib.a
 cp raylib.h ../../Sources/CRaylib/include/
 cp raymath.h ../../Sources/CRaylib/include/
 cp rlgl.h ../../Sources/CRaylib/include/
+if [[ -f ../../raygui/src/raygui.h ]]; then
+    cp ../../raygui/src/raygui.h ../../Sources/CRaylib/include/
+elif [[ -f ../../raygui/raygui.h ]]; then
+    cp ../../raygui/raygui.h ../../Sources/CRaylib/include/
+else
+    echo "Error: Could not find raygui.h in checked out raygui repository"
+    exit 1
+fi
 
 # Go back to project root
 cd ../..

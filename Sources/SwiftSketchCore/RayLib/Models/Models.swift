@@ -192,7 +192,7 @@ public enum Models {
     }
     
     public static func drawModelPoints(_ model: Model, position: Vector3, scale: Double, tint: Color) {
-        DrawModelPoints(model, position, Float(scale), tint)
+        DrawModelWires(model, position, Float(scale), tint)
     }
     
     public static func drawModelPointsEx(
@@ -203,7 +203,7 @@ public enum Models {
         scale: Vector3,
         tint: Color
     ) {
-        DrawModelPointsEx(model, position, rotationAxis, Float(rotationAngle), scale, tint)
+        DrawModelWiresEx(model, position, rotationAxis, Float(rotationAngle), scale, tint)
     }
     
     public static func drawBoundingBox(_ box: BoundingBox, color: Color) {
